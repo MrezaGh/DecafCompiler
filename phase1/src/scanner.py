@@ -14,6 +14,7 @@ T_INTLITERAL.2: /0[xX][0-9a-fA-F]+/ | /[0-9]+/
 T_DOUBLELITERAL.2:  /[0-9]+[\.][0-9]*[eE][+ | -]?[0-9]+/ | /[0-9]+\.[0-9]*/
 T_STRINGLITERAL: /"(?:[^\\"]|\\.)*"/
 T_COMMENT: /\/\/.*/
+T_MULTILINE_COMMENT : /\/\*(\*(?!\/)|[^*])*\*\//
 T_OPR: /[<>!=]=/ | /[+*-=()%<>;:!,]/ | "||" | "]" | "[" | "." | "/" | "&&"
 T_OTHERS: "(" | ")" | "{" | "}"
 UNDEFINED_TOKEN: (T_INTLITERAL CNAME) | (T_DOUBLELITERAL CNAME)
@@ -21,6 +22,8 @@ UNDEFINED_TOKEN: (T_INTLITERAL CNAME) | (T_DOUBLELITERAL CNAME)
 %import common.CNAME
 %import common.WS
 %ignore WS
+%ignore T_COMMENT
+%ignore T_MULTILINE_COMMENT
 """
 
 code = """
