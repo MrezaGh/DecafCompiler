@@ -5,7 +5,13 @@ from lark import Lark, Token, Tree, common
 #     2. add regex for distinguishing tokens
 grammar = r"""
 start: WORD "," WORD "!"
-
+T_BOOLEANLITERAL: "true" | "false"
+T_ID: CNAME
+T_INTLITERAL: /0[xX][0-9a-fA-F]+/ | /[0-9]+/
+T_KEYWORD: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
+T_DOUBLELITERAL:  /[0-9]*[.][0-9]+[eE][+][0-9]+/ | /[0-9]+.[0-9]*/
+T_STRINGLITERAL: /"(?:[^\\"]|\\.)*"/
+%import common.CNAME
 %import common.WORD   // imports from terminal library
 %import common.WS
 %ignore WS
