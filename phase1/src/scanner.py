@@ -5,20 +5,21 @@ import lark
 #     1. Add the keys needed for scanner using Docs
 #     2. add regex for distinguishing tokens
 grammar = r"""
-start: (T_BOOLEANLITERAL | T_KEYWORD | T_ID | T_INTLITERAL | T_DOUBLELITERAL | T_STRINGLITERAL | T_COMMENT | T_OPR) start |
-T_BOOLEANLITERAL: "true" | "false"
-T_KEYWORD: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
-T_ID: CNAME
+start: (T_BOOLEANLITERAL | T_KEYWORD | T_ID | T_INTLITERAL | T_DOUBLELITERAL | T_STRINGLITERAL | T_COMMENT | T_OPR | UNDEFINED_TOKEN ) start |
+T_SPEC_ID.3: (T_KEYWORD /[0-9]+/)| T_BOOLEANLITERAL /[0-9]+/
+T_BOOLEANLITERAL.2: ("true" | "false")
+T_KEYWORD.2: ("void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public")
+T_ID: CNAME | T_SPEC_ID
 T_INTLITERAL: /0[xX][0-9a-fA-F]+/ | /[0-9]+/
-T_DOUBLELITERAL:  /[0-9]*[\.][0-9]+[eE][+][0-9]+/ | /[0-9]+\.[0-9]*/
+T_DOUBLELITERAL:  /[0-9]*[\.][0-9]+[eE][+ | -][0-9]+/ | /[0-9]+\.[0-9]*/
 T_STRINGLITERAL: /"(?:[^\\"]|\\.)*"/
 T_COMMENT: /\/\/.*/
-T_OPR: /[<>!=]=/ | /[+*-=()%<>;:!,]/ | "&&" |"||" | "]" | "[" | "." | "/"
-%import common.CNAME
+T_OPR: /[<>!=]=/ | /[+*-=()%<>;:!,]/ | "||" | "]" | "[" | "." | "/" | "&&"
+UNDEFINED_TOKEN.4: (T_INTLITERAL CNAME) | (T_DOUBLELITERAL CNAME)
 %import common.WORD   // imports from terminal library
+%import common.CNAME
 %import common.WS
 %ignore WS
-
 """
 
 code = """
@@ -71,6 +72,8 @@ def pretty_print(tree: lark.Tree):
             if token.type == "T_OPR" or token.type == "T_KEYWORD":
                 # print(token)
                 tokens.append(str(token))
+            elif token.type == "T_COMMENT":
+                pass
             else:
                 # print(token.type, token)
                 tokens.append(str(token.type) + " " + str(token))
