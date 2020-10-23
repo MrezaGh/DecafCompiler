@@ -1,1 +1,1 @@
-different line count in these files! : file out/t18.out : #14 , file tests/t18.out : #11 
+OK 
