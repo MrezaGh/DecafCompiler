@@ -19,7 +19,7 @@ T_MULTILINE_COMMENT : /\/\*(\*(?!\/)|[^*])*\*\//
 T_OPR: /[<>!=]=/ | /[+*-=()%<>;:!,]/ | "||" | "]" | "[" | "." | "/" | "&&"
 T_OTHERS: "(" | ")" | "{" | "}"
 T_INTERFACE.4: "interface"
-UNDEFINED_TOKEN: (T_INTLITERAL CNAME) | (T_DOUBLELITERAL CNAME)
+UNDEFINED_TOKEN: (T_INTLITERAL CNAME) | (T_DOUBLELITERAL CNAME) | /[#$^~`]+/
 %import common.WORD   // imports from terminal library
 %import common.CNAME
 %import common.WS
@@ -32,28 +32,7 @@ code = """
 Hello, World!
 """
 code = """
-void
-int
-double
-bool
-string
-class
-interface
-null
-this
-extends
-implements
-for
-while
-if
-else
-return
-break
-new
-NewArray
-Print
-ReadInteger
-ReadLine
+hello$
 """
 
 
@@ -68,22 +47,21 @@ def scan(code: str):
 def pretty_print(tree: lark.Tree):
     """use the calculated tree to output in Decaf format"""
     # can use tree.children.type for finding types
-    # TODO: implement...
     tokens = []
     for token in tree.children:
         if type(token) == lark.tree.Tree:
             # pretty_print(token)
             tokens.extend(pretty_print(token))
         else:
-            if token.type == "T_OPR" or token.type == "T_KEYWORD" or token.type == "T_OTHERS":
+            if token.type == "T_OPR" or token.type == "T_KEYWORD" or token.type == "T_OTHERS" or token.type == "T_INTERFACE":
                 # print(token)
                 tokens.append(str(token))
             elif token.type == "T_COMMENT" or token.type == "T_MULTILINE_COMMENT":
                 pass
             elif token.type == "T_SPEC_ID":
                 tokens.append("T_ID" + " " + str(token))
-            elif token.type == "T_INTERFACE":
-                tokens.append(str(token))
+            elif token.type == "UNDEFINED_TOKEN":
+                tokens.append(str(token.type))
             else:
                 # print(token.type, token)
                 tokens.append(str(token.type) + " " + str(token))
