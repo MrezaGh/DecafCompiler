@@ -4,13 +4,16 @@ from lark import Lark, Token, Tree, common
 #     1. Add the keys needed for scanner using Docs
 #     2. add regex for distinguishing tokens
 grammar = r"""
-start: WORD "," WORD "!"
+start: (T_BOOLEANLITERAL | T_KEYWORD | T_ID | T_INTLITERAL | T_DOUBLELITERAL | T_STRINGLITERAL | T_COMMENT | T_OPR) start |
 T_BOOLEANLITERAL: "true" | "false"
+T_KEYWORD: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
 T_ID: CNAME
 T_INTLITERAL: /0[xX][0-9a-fA-F]+/ | /[0-9]+/
-T_KEYWORD: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
-T_DOUBLELITERAL:  /[0-9]*[.][0-9]+[eE][+][0-9]+/ | /[0-9]+.[0-9]*/
+
+T_DOUBLELITERAL:  /[0-9]*[\.][0-9]+[eE][+][0-9]+/ | /[0-9]+\.[0-9]*/
 T_STRINGLITERAL: /"(?:[^\\"]|\\.)*"/
+T_COMMENT: /\/\/.*/
+T_OPR: /[<>!=]=/ | /[+*-=()%<>;:!,]/ | "||" | "]" | "[" | "." | "/"
 %import common.CNAME
 %import common.WORD   // imports from terminal library
 %import common.WS
