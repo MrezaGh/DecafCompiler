@@ -1,1 +1,1 @@
-OK 
+different line count in these files! : file out/t13-true32.out : #2 , file tests/t13-true32.out : #1 
