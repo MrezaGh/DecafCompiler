@@ -5,8 +5,8 @@ from lark import Lark, Token, Tree, common
 #     2. add regex for distinguishing tokens
 grammar = r"""
 start: (T_BOOLEANLITERAL | T_KEYWORD | T_ID | T_INTLITERAL | T_DOUBLELITERAL | T_STRINGLITERAL | T_COMMENT | T_OPR) start |
-T_BOOLEANLITERAL: "true" | "false"
-T_KEYWORD: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
+T_BOOLEANLITERAL2: "true" | "false"
+T_KEYWORD2: "void" | "int" | "bool" | "string" | "class" | "interface" | "null" | "this" | "extends" | "implements" | "for" | "while" | "if" | "else" | "return" | "break" | "continue" | "new" | "NewArray" | "Print" | "ReadInteger" | "ReadLine" | "dtoi" | "itod" | "btoi" | "itob" | "private" | "protected" | "public"
 T_ID: CNAME
 T_INTLITERAL: /0[xX][0-9a-fA-F]+/ | /[0-9]+/
 
@@ -33,13 +33,19 @@ def main():
 
 
 # TODO: build the needed output format that matches project desc
-def pretty_print(tree: Tree):
+def pretty_print(tree: lark.Tree):
     """use the calculated tree to output in Decaf format"""
     # can use tree.children.type for finding types
     # TODO: implement...
     for token in tree.children:
-        # print(token.type, token)
-        print(token)
+        if type(token) == lark.tree.Tree:
+            pretty_print(token)
+        else:
+        #print(token.type, token)
+            if token.type == "T_OPR" or token.type=="T_KEYWORD":
+                print(token)
+            else:
+                print(token.type , token)
 
 
 # TODO: other TODOS
