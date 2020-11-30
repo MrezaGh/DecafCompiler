@@ -16,23 +16,29 @@ def main(argv):
         elif opt in ("-o", "--ofile"):
             outputfile = arg
 
+    success = True
     with open("tests/" + inputfile, "r") as input_file:
         # do stuff with input file
-        pass
+        from .parser import decaf_parser
+        try:
+            decaf_parser.parse(input_file.read())
+        except:
+            success =False
 
     with open("out/" + outputfile, "w") as output_file:
         # write result to output file. 
         # for the sake of testing :
-        output_file.write("""class
-T_ID Program
-{
-void
-T_ID main
-(
-)
-{
-}
-}""")
+        output_file.write("OK" if success else "Syntax Error")
+#         output_file.write("""class
+# T_ID Program
+# {
+# void
+# T_ID main
+# (
+# )
+# {
+# }
+# }""")
 
 
 if __name__ == "__main__":
