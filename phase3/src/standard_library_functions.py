@@ -326,6 +326,7 @@ FALSE:.asciiz "false"
 NEWLINE:.asciiz "\\n"
 DOT: .asciiz "."
 CONST10000: .double -10000.0
+errorMsg: .asciiz "Semantic Error"
 
 """
 

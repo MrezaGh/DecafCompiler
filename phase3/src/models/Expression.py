@@ -457,6 +457,8 @@ class ArrayAccessLValue(LValue):
     def calculate_address(self, symbol_table: SymbolTable) -> Tuple[List[str], str]:
         array_type = self.array_expression.evaluate_type(symbol_table)
         assert isinstance(array_type, ArrayType)
+        index_type = self.index_expression.evaluate_type(symbol_table)
+        assert index_type == "int"
         array_element_size = calc_variable_size(array_type.element_type)
         code = ["\t# Code for array access"]
         code += self.array_expression.generate_code(
@@ -500,6 +502,7 @@ class Assignment(Expression):
     def generate_code(self, symbol_table: SymbolTable) -> List[str]:
         code = self.expression.generate_code(symbol_table)
         # We do not generate_code for l_value. We only need address.
+        assert self.l_value.evaluate_type(symbol_table) == self.expression.evaluate_type(symbol_table)
         if self.expression.evaluate_type(symbol_table) == "double":
             l_value_code, l_value_address = self.l_value.calculate_address(symbol_table)
             code += l_value_code

@@ -343,7 +343,10 @@ class DecafTransformer(Transformer):
         # Generate code
         code = [".globl main", ".text"]
         for arg in args:
-            code_part = arg.generate_code(symbol_table)
+            try:
+                code_part = arg.generate_code(symbol_table)
+            except AssertionError:
+                return [".text\n.globl main\n\nmain:\nla $a0 , errorMsg\naddi $v0 , $zero, 4\nsyscall\njr $ra\n\n"]
             code += code_part
         return code
         # Write on file

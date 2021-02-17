@@ -29,6 +29,7 @@ class Scope:
             return self.name_declaration_map[name]
         if self.parent_scope is None:
             print(f"Error. Variable {name} not found.")
+            assert True == False
         else:
             return self.parent_scope.lookup(name)
 
